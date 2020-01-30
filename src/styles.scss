@@ -1,0 +1,50 @@
+body {
+  background: #85dcb8;
+
+  .app {
+    .authenticate {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .form-header {
+        width: 250px;
+        background: white;
+        height: 3rem;
+        padding: 1rem;
+        border-radius: 5px 5px 0 0;
+        border: 1px solid black;
+        border-bottom: none;
+        display: flex;
+        justify-content: center;
+      }
+
+      form {
+        transition: all 1s ease-in;
+        border: 1px solid black;
+        display: flex;
+        flex-direction: column;
+        background: white;
+        padding: 1rem;
+        border-radius: 2px;
+        height: 250px;
+        width: 250px;
+        justify-content: space-around;
+        input {
+          height: 40px;
+        }
+        .buttons {
+          display: flex;
+          justify-content: space-evenly;
+
+          button {
+            height: 30px;
+            width: 80px;
+          }
+        }
+      }
+    }
+  }
+}
