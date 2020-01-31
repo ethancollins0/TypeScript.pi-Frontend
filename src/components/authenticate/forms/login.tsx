@@ -1,21 +1,21 @@
 import React, { Component } from "react";
 
-export default class Login extends Component<{ changeForm: Function }> {
+export default class Login extends Component<{
+  changeForm: Function;
+  attemptLogin: Function;
+}> {
   state = {
     email: "",
     password: ""
   };
 
-  handleSubmit = (
-    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
-  ) => {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    console.log(this.state);
+    this.props.attemptLogin(this.state);
   };
 
   handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-    console.log(name, value);
     this.setState({ [name]: value });
   };
 
@@ -26,9 +26,9 @@ export default class Login extends Component<{ changeForm: Function }> {
 
   render() {
     return (
-      <form className="login-form" onSubmit={this.handleSubmit}>
+      <form id="login-form" onSubmit={this.handleSubmit}>
         <input
-          type="text"
+          type="email"
           name="email"
           value={this.state.email}
           onChange={this.handleChange}
@@ -44,8 +44,10 @@ export default class Login extends Component<{ changeForm: Function }> {
           required
         />
         <div className="buttons">
-          <button onClick={this.handleChangeForm}>Signup</button>
-          <button onClick={this.handleSubmit}>Submit</button>
+          <button type="button" onClick={this.handleChangeForm}>
+            Signup
+          </button>
+          <button>Submit</button>
         </div>
       </form>
     );
