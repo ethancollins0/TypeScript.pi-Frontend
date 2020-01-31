@@ -35,6 +35,11 @@ body {
         input {
           height: 40px;
         }
+
+        input:focus {
+          outline: none;
+        }
+
         .buttons {
           display: flex;
           justify-content: space-evenly;
