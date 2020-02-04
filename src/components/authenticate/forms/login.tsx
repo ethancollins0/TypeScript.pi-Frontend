@@ -5,8 +5,8 @@ export default class Login extends Component<{
   attemptLogin: Function;
 }> {
   state = {
-    email: "",
-    password: ""
+    email: "username@gmail.com",
+    password: "password"
   };
 
   handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {

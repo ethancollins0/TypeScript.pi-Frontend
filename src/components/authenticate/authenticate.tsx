@@ -1,14 +1,20 @@
 import React, { Component } from "react";
-import Login from "./forms/login";
-import Signup from "./forms/signup";
+import Login from "./forms/Login";
+import Signup from "./forms/Signup";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import StatusCodes from "../StatusCodes";
-const checkStatus = new StatusCodes();
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-export default class Authenticate extends Component<{ baseUrl: string }> {
-  state = {
-    signup: false
-  };
+interface Props extends RouteComponentProps<any> {
+  baseUrl: string;
+}
+
+class Authenticate extends Component<Props, { signup: boolean }> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      signup: false
+    };
+  }
 
   handleChangeForm = (event: any): void => {
     this.setState({ signup: !this.state.signup });
@@ -17,8 +23,9 @@ export default class Authenticate extends Component<{ baseUrl: string }> {
   attemptLogin = (formInputs: { email: string; password: string }): void => {
     const { email, password } = formInputs;
     const baseUrl = this.props.baseUrl;
-    fetch(baseUrl + "login", {
+    fetch(baseUrl + "/login", {
       method: "POST",
+      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json"
       },
@@ -27,11 +34,11 @@ export default class Authenticate extends Component<{ baseUrl: string }> {
         password
       })
     }).then(res => {
-      checkStatus.checkCodes(res).then((result: any) => {
-        typeof result == "number"
-          ? alert(`Error Code ${result}`)
-          : window.localStorage.setItem("token", result.token);
-      });
+      res.status == 200
+        ? this.props.history.push("/home")
+        : res.status == 401
+        ? alert("Invalid credentials")
+        : alert("internal error 501");
     });
   };
 
@@ -59,3 +66,5 @@ export default class Authenticate extends Component<{ baseUrl: string }> {
     );
   }
 }
+
+export default withRouter(Authenticate);
