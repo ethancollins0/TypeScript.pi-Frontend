@@ -1,8 +1,17 @@
 import React, { Component } from "react";
+import ValidateToken from "../../ValidateToken";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+const validate = new ValidateToken();
 
-export default class Home extends Component<{ baseUrl: string }> {
-  componentDidMount() {
-    alert("hey");
+interface Props extends RouteComponentProps<any> {
+  baseUrl: string;
+}
+
+class Home extends Component<Props> {
+  componentWillMount() {
+    validate.checkToken(this.props.baseUrl).then(res => {
+      res ? console.log("success") : this.props.history.push("/authenticate");
+    });
   }
 
   render() {
@@ -13,3 +22,5 @@ export default class Home extends Component<{ baseUrl: string }> {
     );
   }
 }
+
+export default withRouter(Home);

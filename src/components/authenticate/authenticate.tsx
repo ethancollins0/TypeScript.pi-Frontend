@@ -3,6 +3,8 @@ import Login from "./forms/Login";
 import Signup from "./forms/Signup";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+import ValidateToken from "../../ValidateToken";
+const validate = new ValidateToken();
 
 interface Props extends RouteComponentProps<any> {
   baseUrl: string;
@@ -16,6 +18,12 @@ class Authenticate extends Component<Props, { signup: boolean }> {
     };
   }
 
+  componentWillMount() {
+    validate.checkToken(this.props.baseUrl).then(res => {
+      res ? this.props.history.push("/home") : console.log("no token");
+    });
+  }
+
   handleChangeForm = (event: any): void => {
     this.setState({ signup: !this.state.signup });
   };
@@ -25,20 +33,24 @@ class Authenticate extends Component<Props, { signup: boolean }> {
     const baseUrl = this.props.baseUrl;
     fetch(baseUrl + "/login", {
       method: "POST",
-      credentials: "same-origin",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": "true"
       },
+      credentials: "include",
       body: JSON.stringify({
         email,
         password
       })
-    }).then(res => {
-      res.status == 200
-        ? this.props.history.push("/home")
-        : res.status == 401
-        ? alert("Invalid credentials")
-        : alert("internal error 501");
+    }).then((res: any) => {
+      if (res.status == 200) {
+        console.log("success");
+        this.props.history.push("/home");
+      } else {
+        res.status == 401
+          ? alert("Invalid credentials")
+          : alert("internal error 501");
+      }
     });
   };
 
