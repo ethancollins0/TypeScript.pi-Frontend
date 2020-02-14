@@ -18,7 +18,7 @@ class Authenticate extends Component<Props, { signup: boolean }> {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     validate.checkToken(this.props.baseUrl).then(res => {
       res ? this.props.history.push("/home") : console.log("no token");
     });
@@ -44,7 +44,36 @@ class Authenticate extends Component<Props, { signup: boolean }> {
       })
     }).then((res: any) => {
       if (res.status == 200) {
-        console.log("success");
+        this.props.history.push("/home");
+      } else {
+        res.status == 401
+          ? alert("Invalid credentials")
+          : alert("internal error 501");
+      }
+    });
+  };
+
+  attemptSignup = (formInputs: {
+    email: string;
+    name: string;
+    password: string;
+    password_confirmation: string;
+  }) => {
+    const { email, name, password } = formInputs;
+    fetch(this.props.baseUrl + "/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": "true"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        email,
+        name,
+        password
+      })
+    }).then((res: any) => {
+      if (res.status == 200) {
         this.props.history.push("/home");
       } else {
         res.status == 401
@@ -66,7 +95,10 @@ class Authenticate extends Component<Props, { signup: boolean }> {
           transitionLeaveTimeout={300}
         >
           {this.state.signup ? (
-            <Signup changeForm={this.handleChangeForm} />
+            <Signup
+              changeForm={this.handleChangeForm}
+              attemptSignup={this.attemptSignup}
+            />
           ) : (
             <Login
               changeForm={this.handleChangeForm}
