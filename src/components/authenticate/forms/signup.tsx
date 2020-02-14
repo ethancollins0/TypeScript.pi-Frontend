@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 
-export default class Signup extends Component<{ changeForm: Function }> {
+export default class Signup extends Component<{
+  changeForm: Function;
+  attemptSignup: Function;
+}> {
   state = {
     email: "",
     name: "",
@@ -22,7 +25,11 @@ export default class Signup extends Component<{ changeForm: Function }> {
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ): void => {
     e.preventDefault();
-    console.log(this.state);
+    if (this.state.password != this.state.password_confirmation) {
+      alert("passwords must match");
+      return;
+    }
+    this.props.attemptSignup(this.state);
   };
 
   render() {
@@ -30,13 +37,15 @@ export default class Signup extends Component<{ changeForm: Function }> {
       <form className="signup-form" onSubmit={this.handleSubmit}>
         <input
           onChange={this.handleChange}
-          type="text"
+          placeholder="Enter email"
+          type="email"
           name="email"
           value={this.state.email}
           required
         />
         <input
           onChange={this.handleChange}
+          placeholder="Enter name"
           type="text"
           name="name"
           value={this.state.name}
@@ -44,6 +53,7 @@ export default class Signup extends Component<{ changeForm: Function }> {
         />
         <input
           onChange={this.handleChange}
+          placeholder="Enter password"
           type="password"
           name="password"
           value={this.state.password}
@@ -51,6 +61,7 @@ export default class Signup extends Component<{ changeForm: Function }> {
         />
         <input
           onChange={this.handleChange}
+          placeholder="Enter password confirmation"
           type="password"
           name="password_confirmation"
           value={this.state.password_confirmation}
