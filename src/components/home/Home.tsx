@@ -18,9 +18,25 @@ class Home extends Component<Props> {
     };
 
     validate.checkToken(this.props.baseUrl).then(res => {
-      res ? console.log("success") : redirect();
+      res ? this.getSystems() : redirect();
     });
   }
+
+  getSystems = () => {
+    fetch(this.props.baseUrl + "/systems", {
+      method: "GET",
+      headers: {
+        "Access-Control-Allow-Headers": "true"
+      },
+      credentials: "include"
+    }).then(res => {
+      res.status == 200
+        ? res.json().then(res => console.log(res.systems))
+        : res.status == 401
+        ? console.log("unauthorized")
+        : console.log("server error");
+    });
+  };
 
   render() {
     return (

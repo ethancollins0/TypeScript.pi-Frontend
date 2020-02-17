@@ -1,13 +1,16 @@
 body {
-  background: #85dcb8;
+  background: #fff;
   padding: 0;
   margin: 0;
 
   .app {
     .navbar {
+      margin: 0 auto;
       width: 100vw;
       height: 4rem;
-      background: silver;
+      background: #333;
+      line-height: 4 rem;
+      border-bottom: 3px solid #04c2c9;
     }
 
     .authenticate {
