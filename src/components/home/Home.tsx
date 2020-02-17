@@ -1,16 +1,24 @@
 import React, { Component } from "react";
 import ValidateToken from "../../ValidateToken";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+import Cookies from "universal-cookie";
+
 const validate = new ValidateToken();
+const cookies = new Cookies();
 
 interface Props extends RouteComponentProps<any> {
   baseUrl: string;
 }
 
 class Home extends Component<Props> {
-  componentWillMount() {
+  componentDidMount() {
+    const redirect = () => {
+      cookies.remove("token");
+      this.props.history.push("/authenticate");
+    };
+
     validate.checkToken(this.props.baseUrl).then(res => {
-      res ? console.log("success") : this.props.history.push("/authenticate");
+      res ? console.log("success") : redirect();
     });
   }
 

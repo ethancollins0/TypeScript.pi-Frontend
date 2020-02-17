@@ -2,30 +2,32 @@ import React, { Component } from "react";
 import Login from "./forms/Login";
 import Signup from "./forms/Signup";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { RouteComponentProps, withRouter } from "react-router-dom";
 import ValidateToken from "../../ValidateToken";
+import Cookies from "universal-cookie";
+import { withRouter, RouteComponentProps } from "react-router";
 const validate = new ValidateToken();
+const cookies = new Cookies();
 
 interface Props extends RouteComponentProps<any> {
   baseUrl: string;
+  checkToken: Function;
 }
 
 class Authenticate extends Component<Props, { signup: boolean }> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      signup: false
-    };
-  }
-
-  componentDidMount() {
-    validate.checkToken(this.props.baseUrl).then(res => {
-      res ? this.props.history.push("/home") : console.log("no token");
-    });
-  }
+  state = {
+    signup: false
+  };
 
   handleChangeForm = (event: any): void => {
     this.setState({ signup: !this.state.signup });
+  };
+
+  componentDidMount = () => {
+    if (cookies.get("token")) {
+      validate.checkToken(this.props.baseUrl).then((res: boolean) => {
+        res ? this.props.history.push("/home") : cookies.remove("token");
+      });
+    }
   };
 
   attemptLogin = (formInputs: { email: string; password: string }): void => {
@@ -74,7 +76,7 @@ class Authenticate extends Component<Props, { signup: boolean }> {
       })
     }).then((res: any) => {
       if (res.status == 200) {
-        this.props.history.push("/home");
+        this.props.checkToken();
       } else {
         res.status == 401
           ? alert("Invalid credentials")
