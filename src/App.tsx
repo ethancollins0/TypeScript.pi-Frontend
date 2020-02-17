@@ -1,17 +1,15 @@
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect
-} from "react-router-dom";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
+import history from "./history";
 import Authenticate from "./components/authenticate/Authenticate";
 import Home from "./components/home/Home";
 import Navbar from "./components/Navbar";
 import "./styles.scss";
 import ValidateToken from "./ValidateToken";
-const validate = new ValidateToken();
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
+const validate = new ValidateToken();
 const baseUrl = "http://localhost:3001";
 
 export default class App extends Component {
@@ -19,28 +17,35 @@ export default class App extends Component {
     loggedIn: false
   };
 
-  componentWillMount() {
-    validate.checkToken(baseUrl).then(res => {
-      res
-        ? this.setState({ loggedIn: true })
-        : this.setState({ loggedIn: false });
-    });
+  componentDidMount() {
+    this.checkToken();
   }
+
+  checkToken = () => {
+    return validate.checkToken(baseUrl).then(res => {
+      return res
+        ? this.setState({ loggedIn: true }, () => {
+            return true;
+          })
+        : this.setState({ loggedIn: false }, () => {
+            cookies.remove("token");
+            return false;
+          });
+    });
+  };
 
   render() {
     return (
-      <Router>
+      <Router history={history}>
         <div className="app">
           <Switch>
             <Route path="/authenticate">
-              <Authenticate baseUrl={baseUrl} />
+              <Authenticate checkToken={this.checkToken} baseUrl={baseUrl} />
             </Route>
             <Route path="/home">
+              <Navbar />
               {this.state.loggedIn ? (
-                <div>
-                  <Navbar />
-                  <Home baseUrl={baseUrl} />
-                </div>
+                <Home baseUrl={baseUrl} />
               ) : (
                 <Redirect to="/authenticate" />
               )}
