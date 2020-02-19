@@ -2,12 +2,15 @@ import React, { Component } from "react";
 import ValidateToken from "../../ValidateToken";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import Cookies from "universal-cookie";
+import SystemCard from "./SystemCard";
 
 const validate = new ValidateToken();
 const cookies = new Cookies();
 
 interface Props extends RouteComponentProps<any> {
   baseUrl: string;
+  systems: any;
+  setSystems: Function;
 }
 
 class Home extends Component<Props> {
@@ -22,6 +25,12 @@ class Home extends Component<Props> {
     });
   }
 
+  renderSystems = () => {
+    return this.props.systems.map((system: any, index: number) => {
+      return <SystemCard pi={system} key={index} />;
+    });
+  };
+
   getSystems = () => {
     fetch(this.props.baseUrl + "/systems", {
       method: "GET",
@@ -31,7 +40,7 @@ class Home extends Component<Props> {
       credentials: "include"
     }).then(res => {
       res.status == 200
-        ? res.json().then(res => console.log(res.systems))
+        ? res.json().then(res => this.props.setSystems(res.systems))
         : res.status == 401
         ? console.log("unauthorized")
         : console.log("server error");
@@ -41,7 +50,9 @@ class Home extends Component<Props> {
   render() {
     return (
       <div className="home">
-        <h1>Hiya</h1>
+        <section className="system-card-container">
+          {this.renderSystems()}
+        </section>
       </div>
     );
   }

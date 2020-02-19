@@ -4,8 +4,40 @@ body {
   margin: 0;
 
   .app {
+    .home {
+      display: flex;
+      justify-content: center;
+      .system-card-container {
+        width: 90vw;
+        .system-card {
+          height: 200px;
+          width: 200px;
+          background: #333;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          border: 1px solid #04c2c9;
+
+          h4 {
+            color: #fff;
+          }
+          section {
+            width: 100%;
+            background: #f3f3f3;
+            margin-bottom: 0.5rem;
+            height: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16pt;
+          }
+        }
+      }
+    }
+
     .navbar {
       margin: 0 auto;
+      margin-bottom: 2rem;
       width: 100vw;
       height: 4rem;
       background: #333;

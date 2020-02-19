@@ -14,12 +14,17 @@ const baseUrl = "http://localhost:3001";
 
 export default class App extends Component {
   state = {
-    loggedIn: false
+    loggedIn: false,
+    systems: []
   };
 
   componentDidMount() {
     this.checkToken();
   }
+
+  setSystems = (systems: any) => {
+    this.setState({ systems });
+  };
 
   checkToken = () => {
     return validate.checkToken(baseUrl).then(res => {
@@ -45,7 +50,11 @@ export default class App extends Component {
             <Route path="/home">
               <Navbar />
               {this.state.loggedIn ? (
-                <Home baseUrl={baseUrl} />
+                <Home
+                  systems={this.state.systems}
+                  setSystems={this.setSystems}
+                  baseUrl={baseUrl}
+                />
               ) : (
                 <Redirect to="/authenticate" />
               )}
