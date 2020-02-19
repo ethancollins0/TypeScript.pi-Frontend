@@ -46,7 +46,7 @@ class Authenticate extends Component<Props, { signup: boolean }> {
       })
     }).then((res: any) => {
       if (res.status == 200) {
-        this.props.history.push("/home");
+        this.props.checkToken().then(this.props.history.push("/home"));
       } else {
         res.status == 401
           ? alert("Invalid credentials")
