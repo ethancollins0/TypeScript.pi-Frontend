@@ -31,6 +31,40 @@ body {
             align-items: center;
             font-size: 16pt;
           }
+
+          button {
+            height: 2rem;
+            font-size: 11pt;
+            font-family: sans-serif;
+          }
+
+          .display-button {
+            outline: none;
+            border: none;
+            border-radius: 0;
+            border: 1px solid grey;
+          }
+
+          .online {
+            background: green;
+          }
+          .offline {
+            background: rgb(207, 26, 26);
+          }
+
+          .watering {
+            background: green;
+          }
+
+          .not-watering {
+            background: rgba(73, 138, 182, 0.952);
+          }
+
+          .token-button:hover {
+            cursor: pointer;
+            outline: none;
+            box-sizing: border-box;
+          }
         }
       }
     }

@@ -27,7 +27,9 @@ class Home extends Component<Props> {
 
   renderSystems = () => {
     return this.props.systems.map((system: any, index: number) => {
-      return <SystemCard pi={system} key={index} />;
+      return (
+        <SystemCard baseUrl={this.props.baseUrl} pi={system} key={index} />
+      );
     });
   };
 
